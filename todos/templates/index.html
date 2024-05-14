@@ -1,0 +1,35 @@
+{% load humanize %}
+<html>
+  <head>
+    <title>Todo App</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <style>
+      .message {
+        border: 1px solid #f2f2f2;
+      }
+      .error {
+        background-color: red;
+      }
+      .success {
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Todos</h1>
+
+    <div id="feedback"></div>
+
+    {% for todo in todo_items %}
+      <div>
+        <input type="checkbox" {% if todo.completed %}checked{% endif %}
+          hx-post="/completed/{{ todo.id }}"
+          hx-target="#feedback"
+          hx-swap="innerHTML"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        >
+        <span>{{ todo.title }} (due: {{ todo.due_date|naturaltime }})</span>
+      </div>
+    {% endfor %}
+  </body>
+</html>
